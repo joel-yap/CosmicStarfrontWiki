@@ -1,0 +1,6 @@
+@CosmicStarfrontWiki.API_HostAddress = http://localhost:5036
+
+GET {{CosmicStarfrontWiki.API_HostAddress}}/factions
+Accept: application/json
+
+###
