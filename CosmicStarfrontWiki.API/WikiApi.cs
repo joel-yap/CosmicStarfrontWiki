@@ -17,6 +17,10 @@ public static class WikiApi
         factionGroup.MapPut("/add", AddFaction);
         factionGroup.MapPut("/edit{id}", EditFaction);
 
+        var pageGroup = endpoints.MapGroup("/pages").WithTags("Pages");
+
+        pageGroup.MapPut("/add", AddPage);
+
         var characterGroup = endpoints.MapGroup("/characters").WithTags("Characters");
 
         characterGroup.MapGet("/names", GetCharacterNames);
@@ -77,10 +81,8 @@ public static class WikiApi
     {
         using (var context = new AppDbContext())
         {
-            int maxId = context.Factions.Max(p => p.Id) + 1;
             Faction newFaction = new Faction
             {
-                Id = maxId,
                 Name = faction.Name,
                 Description = faction.Description,
             };
@@ -186,6 +188,54 @@ public static class WikiApi
             return Results.BadRequest($"The character {name} does not exist.");
         }
     }
+
+    public static IResult GetPage(string name)
+    {
+        var pages = new List<WikiPage>();
+
+        using (var context = new AppDbContext())
+        {
+            pages = context.WikiPages.ToList();
+        }
+
+        var searchResult = pages.Where(f => f.Title == name).SingleOrDefault();
+
+        if (searchResult != null)
+        {
+            // Make a DTO subset of the model to prevent users knowing exactly how the models are stored.
+            /*
+            var dto = new FactionDTO
+            {
+                Name = searchResult.Name,
+                Description = searchResult.Description
+            };
+            */
+
+            //var jsonFaction = JsonSerializer.Serialize(dto);
+
+            return Results.Ok();
+        }
+        else
+        {
+            return Results.BadRequest($"The faction {name} does not exist.");
+        }
+    }
+
+    public static IResult AddPage(WikiPage page)
+    {
+        using (var context = new AppDbContext())
+        {
+            WikiPage newPage = new WikiPage
+            {
+                Category = page.Category,
+                Title = page.Title,
+                Sections = page.Sections,
+            };
+            context.Add(newPage);
+            context.SaveChanges();
+        }
+        return Results.Ok();
+    }
 }
 
 public class FactionDTO
@@ -200,3 +250,26 @@ public class CharacterDTO
     public required string Description { get; set; }
     public required string Stats { get; set; }
 }
+
+public class WikiPageDTO
+{
+    public int Id { get; set; }
+    public required Category Category { get; set; }
+    public required string Title { get; set; }
+    public List<SectionDTO> Sections { get; set; } = new List<SectionDTO>();
+}
+
+public class SectionDTO
+{
+    public int Order { get; set; } // Order in which the section appears
+    public required string Header { get; set; }
+    public List<ContentDTO> Contents { get; set; } = new List<ContentDTO>();
+}
+
+public class ContentDTO
+{
+    public int Order { get; set; } // Order in which the content appears within the section
+    public string? Subheader { get; set; }
+    public required string Text { get; set; }
+}
+

@@ -6,6 +6,12 @@ namespace CosmicStarfrontWiki.Data
     public class AppDbContext : DbContext
     { 
         public DbSet<Faction> Factions { get; set; } 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) { optionsBuilder.UseSqlite("Data Source=..\\CosmicStarfrontWiki.Data\\app.db"); } 
+        public DbSet<WikiPage> WikiPages { get; set; }
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) { optionsBuilder.UseSqlite("Data Source=..\\CosmicStarfrontWiki.Data\\app.db"); }
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        { // Configure relationships
+          modelBuilder.Entity<Section>() .HasOne(s => s.WikiPage) .WithMany(wp => wp.Sections) .HasForeignKey(s => s.WikiPageId); 
+          modelBuilder.Entity<Content>() .HasOne(c => c.Section) .WithMany(s => s.Contents) .HasForeignKey(c => c.SectionId); 
+        }
     }
 }
