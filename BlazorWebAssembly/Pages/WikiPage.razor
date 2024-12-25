@@ -1,0 +1,14 @@
+﻿@page "/pages"
+@using BlazorWebAssembly.Services
+
+<h3>WikiPage</h3>
+@if (ResultPage != null) 
+{
+    <div>@ResultPage</div>
+} else 
+{
+    <div>Loading...</div>
+}
+
+
+

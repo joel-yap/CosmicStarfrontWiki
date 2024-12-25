@@ -5,10 +5,27 @@ using CosmicStarfrontWiki.Model;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 
+// Add CORS services to the DI container
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowSpecificOrigins", policy =>
+    {
+        policy.WithOrigins("https://localhost:7243") // Replace with your client-side URL
+              .AllowAnyHeader()
+              .AllowAnyMethod();
+    });
+});
+
+
 var app = builder.Build();
+
+// Apply the CORS policy
+app.UseCors("AllowSpecificOrigins");
+
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
