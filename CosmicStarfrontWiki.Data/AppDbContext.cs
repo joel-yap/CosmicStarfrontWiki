@@ -7,6 +7,8 @@ namespace CosmicStarfrontWiki.Data
     { 
         public DbSet<Faction> Factions { get; set; } 
         public DbSet<WikiPage> WikiPages { get; set; }
+        public DbSet<Section> Sections { get; set; }
+        public DbSet<Content> Contents { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) { optionsBuilder.UseSqlite("Data Source=..\\CosmicStarfrontWiki.Data\\app.db"); }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         { // Configure relationships
