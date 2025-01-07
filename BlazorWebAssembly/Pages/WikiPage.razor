@@ -1,10 +1,21 @@
-﻿@page "/pages"
+﻿@page "/wiki/{Name}"
 @using BlazorWebAssembly.Services
 
 <h3>WikiPage</h3>
 @if (ResultPage != null) 
 {
-    <div>@ResultPage</div>
+    <div>@ResultPage.Title</div>
+    @foreach (var pageSection in ResultPage.Sections) 
+    {
+        <div>@pageSection.Header</div>
+        foreach (var content in pageSection.Contents) 
+        {
+            <div>@content.Subheader</div>
+            <div>@content.Text</div>
+        }
+        
+    }
+    
 } else 
 {
     <div>Loading...</div>

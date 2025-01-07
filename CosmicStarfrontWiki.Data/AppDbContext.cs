@@ -5,7 +5,6 @@ namespace CosmicStarfrontWiki.Data
 {
     public class AppDbContext : DbContext
     { 
-        public DbSet<Faction> Factions { get; set; } 
         public DbSet<WikiPage> WikiPages { get; set; }
         public DbSet<Section> Sections { get; set; }
         public DbSet<Content> Contents { get; set; }
