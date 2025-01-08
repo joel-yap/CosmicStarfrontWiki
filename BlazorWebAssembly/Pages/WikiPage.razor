@@ -1,21 +1,51 @@
 ﻿@page "/wiki/{Name}"
 @using BlazorWebAssembly.Services
 
-<h3>WikiPage</h3>
 @if (ResultPage != null) 
 {
-    <div>@ResultPage.Title</div>
-    @foreach (var pageSection in ResultPage.Sections) 
-    {
-        <div>@pageSection.Header</div>
-        foreach (var content in pageSection.Contents) 
-        {
-            <div>@content.Subheader</div>
-            <div>@content.Text</div>
-        }
-        
+    <PageTitle>@ResultPage.Title</PageTitle>
+    if (ResultPage.Image != null) {
+        <img src=@ResultPage.Image style=@ResultPage.ImageStyle />
     }
-    
+    <div>
+        @foreach (var pageSection in ResultPage.Sections)
+        {
+            if (sectionCounter == 0) {
+                <h1>@pageSection.Header</h1>
+            } else {
+                <h3>@pageSection.Header</h3>
+            }
+            sectionCounter++;
+            <hr />
+            foreach (var content in pageSection.Contents)
+            {
+                <h4><b>@content.Subheader</b></h4>
+                <div style="display: flex; justify-content: space-between">
+                    <p>
+                        @content.Text
+                    </p>
+                    @if (content.Image != null)
+                    {
+                        <img src=@content.Image style=@content.ImageStyle />
+                    }
+                </div>
+            }
+        }
+        @if (ResultPage.Gallery != null) {
+            <h4><b>Gallery</b></h4>
+            <hr />
+            <div style="display: flex; width: 100%">
+                @for (int i = 0; i < ResultPage.Gallery.Images.Count; i++)
+                    {
+                        <div>
+                            <img src=@ResultPage.Gallery.Images[i] style=@ResultPage.Gallery.ImageStyles[i] />
+                            <p style="margin-left: 10px;">@ResultPage.Gallery.Captions[i]</p>
+                        </div>
+                    }
+            </div>
+            
+        }
+    </div>
 } else 
 {
     <div>Loading...</div>

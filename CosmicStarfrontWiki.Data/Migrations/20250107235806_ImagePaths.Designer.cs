@@ -2,6 +2,7 @@
 using CosmicStarfrontWiki.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -9,9 +10,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CosmicStarfrontWiki.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250107235806_ImagePaths")]
+    partial class ImagePaths
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.0");
@@ -46,32 +49,6 @@ namespace CosmicStarfrontWiki.Data.Migrations
                     b.HasIndex("SectionId");
 
                     b.ToTable("Contents");
-                });
-
-            modelBuilder.Entity("CosmicStarfrontWiki.Model.Gallery", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.PrimitiveCollection<string>("Captions")
-                        .HasColumnType("TEXT");
-
-                    b.PrimitiveCollection<string>("ImageStyles")
-                        .HasColumnType("TEXT");
-
-                    b.PrimitiveCollection<string>("Images")
-                        .HasColumnType("TEXT");
-
-                    b.Property<int>("WikiPageId")
-                        .HasColumnType("INTEGER");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("WikiPageId")
-                        .IsUnique();
-
-                    b.ToTable("Galleries");
                 });
 
             modelBuilder.Entity("CosmicStarfrontWiki.Model.Section", b =>
@@ -132,17 +109,6 @@ namespace CosmicStarfrontWiki.Data.Migrations
                     b.Navigation("Section");
                 });
 
-            modelBuilder.Entity("CosmicStarfrontWiki.Model.Gallery", b =>
-                {
-                    b.HasOne("CosmicStarfrontWiki.Model.WikiPage", "WikiPage")
-                        .WithOne("Gallery")
-                        .HasForeignKey("CosmicStarfrontWiki.Model.Gallery", "WikiPageId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("WikiPage");
-                });
-
             modelBuilder.Entity("CosmicStarfrontWiki.Model.Section", b =>
                 {
                     b.HasOne("CosmicStarfrontWiki.Model.WikiPage", "WikiPage")
@@ -161,8 +127,6 @@ namespace CosmicStarfrontWiki.Data.Migrations
 
             modelBuilder.Entity("CosmicStarfrontWiki.Model.WikiPage", b =>
                 {
-                    b.Navigation("Gallery");
-
                     b.Navigation("Sections");
                 });
 #pragma warning restore 612, 618

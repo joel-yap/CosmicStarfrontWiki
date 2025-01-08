@@ -9,6 +9,7 @@ public partial class WikiPage
     public WikiPageDTO? ResultPage;
     [Parameter]
     public required string Name {  get; set; }
+    int sectionCounter = 0;
     protected override async Task OnInitializedAsync()
     {
         var page = await PageService.GetWikiPage(Name);

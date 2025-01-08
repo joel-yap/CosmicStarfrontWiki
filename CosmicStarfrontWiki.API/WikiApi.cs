@@ -1,8 +1,10 @@
 ﻿using CosmicStarfrontWiki.Data;
 using CosmicStarfrontWiki.Model;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Services;
 using Microsoft.VisualBasic;
 using System;
+using System.ComponentModel.DataAnnotations;
 using System.Security.AccessControl;
 using System.Text.Json;
 using System.Xml.Linq;
@@ -24,6 +26,7 @@ public static class WikiApi
         pageGroup.MapPut("/editpage", EditPage);
         pageGroup.MapPut("/editsection", EditSection);
         pageGroup.MapPut("/editcontent", EditContent);
+        pageGroup.MapPut("/editgallery", EditGallery);
 
     }
 
@@ -32,12 +35,14 @@ public static class WikiApi
         var pages = new List<WikiPage>();
         var sections = new List<Section>();
         var contents = new List<Content>();
+        var galleries = new List<Gallery>();
 
         using (var context = new AppDbContext())
         {
             pages = context.WikiPages.ToList();
             sections = context.Sections.ToList();
             contents = context.Contents.ToList();
+            galleries = context.Galleries.ToList();
         }
 
         var searchResult = pages.Where(f => f.Title == name).SingleOrDefault();
@@ -48,6 +53,8 @@ public static class WikiApi
             {
                 Category = searchResult.Category,
                 Title = searchResult.Title,
+                Image = searchResult.Image,
+                ImageStyle = searchResult.ImageStyle,
             };
             var searchSections = sections.Where(s => s.WikiPageId == searchResult.Id).OrderBy(s => s.Order).ToList();
             var resultSections = new List<SectionDTO>();
@@ -66,12 +73,24 @@ public static class WikiApi
                     {
                         Text = content.Text,
                         Subheader = content.Subheader,
+                        Image = content.Image,
+                        ImageStyle = content.ImageStyle,
                     };
                     resultContents.Add(newContentDTO);
                 }
                 newSectionDTO.Contents = resultContents;
             }
             result.Sections = resultSections;
+            var searchGalleries = galleries.Where(g => g.WikiPageId == searchResult.Id).SingleOrDefault();
+            if (searchGalleries != null) {
+                var resultGallery = new GalleryDTO
+                {
+                    Images = searchGalleries.Images,
+                    ImageStyles = searchGalleries.ImageStyles,
+                    Captions = searchGalleries.Captions,
+                };
+                result.Gallery = resultGallery;
+            }
 
             return Results.Ok(result);
         }
@@ -86,7 +105,9 @@ public static class WikiApi
         WikiPage newPage = new WikiPage
         {
             Category = page.Category,
-            Title = page.Title
+            Title = page.Title,
+            Image = page.Image,
+            ImageStyle = page.ImageStyle,
         };
         using (var context = new AppDbContext())
         {
@@ -124,7 +145,9 @@ public static class WikiApi
                                 Subheader = contentDTO.Subheader,
                                 Text = contentDTO.Text,
                                 Section = section,
-                                Order = contentOrder++
+                                Order = contentOrder++,
+                                Image = contentDTO.Image,
+                                ImageStyle=contentDTO.ImageStyle,
                             };
                             contentList.Add(newContent);
                         }
@@ -137,7 +160,6 @@ public static class WikiApi
         }
         return Results.Ok();
     }
-
 
     public static IResult GetPages()
     {
@@ -208,6 +230,41 @@ public static class WikiApi
             }
         }
     }
+
+    public static IResult EditGallery(string name, GalleryDTO galleryDTO)
+    {
+        using (var context = new AppDbContext())
+        {
+            var pages = context.WikiPages.ToList();
+            var galleries = context.Galleries.ToList();
+            var searchResult = pages.Where(f => f.Title == name).SingleOrDefault();
+            if (searchResult != null)
+            {
+                var galleryResult = galleries.Where(g => g.WikiPageId == searchResult.Id).SingleOrDefault();
+                if (galleryResult != null) { 
+                    // Update the existing Gallery
+                    galleryResult.Images = galleryDTO.Images;
+                    galleryResult.ImageStyles = galleryDTO.ImageStyles;
+                    galleryResult.Captions = galleryDTO.Captions; 
+                } else
+                {
+                    searchResult.Gallery = new Gallery
+                    {
+                        WikiPage = searchResult,
+                        Images = galleryDTO.Images,
+                        ImageStyles = galleryDTO.ImageStyles,
+                        Captions = galleryDTO.Captions,
+                    };
+                }
+                context.SaveChanges();
+                return Results.Ok();
+            }
+            else
+            {
+                return Results.NotFound();
+            }
+        }
+    }
 }
 
 public class FactionDTO
@@ -229,6 +286,9 @@ public class WikiPageDTO
     public required Category Category { get; set; }
     public required string Title { get; set; }
     public List<SectionDTO> Sections { get; set; } = new List<SectionDTO>();
+    public string? Image { get; set; }
+    public string? ImageStyle { get; set; }
+    public GalleryDTO? Gallery { get; set; }
 }
 
 public class SectionDTO
@@ -241,6 +301,15 @@ public class ContentDTO
 {
     public string? Subheader { get; set; }
     public required string Text { get; set; }
+    public string? Image { get; set; }
+    public string? ImageStyle { get; set; }
+}
+
+public class GalleryDTO
+{
+    public List<string>? Images { get; set; }
+    public List<string>? ImageStyles { get; set; }
+    public List<string>? Captions { get; set; }
 }
 
 
