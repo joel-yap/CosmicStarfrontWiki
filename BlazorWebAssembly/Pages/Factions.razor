@@ -1,0 +1,87 @@
+﻿@page "/Factions"
+@{
+    string Title = "Factions";
+}
+
+<h1>Factions</h1>
+
+<style>
+    .image-grid {
+        list-style-type: none; /* Remove list bullets */
+        padding: 0; /* Remove default padding */
+        display: flex;
+        flex-wrap: wrap; /* Allow items to wrap to the next line */
+        gap: 10px; /* Space between grid items */
+    }
+
+        .image-grid li {
+            flex: 1 1 200px; /* Each item will take up at least 200px, but can grow */
+            margin: 10px;
+            box-sizing: border-box;
+        }
+
+        .image-grid img {
+            max-width: 100%; /* Ensure images fit within their container */
+            height: auto; /* Maintain aspect ratio */
+            display: block;
+        }
+</style>
+
+
+<ul class="image-grid">
+    <li>
+        <div style="display: flex; flex-direction: column; align-items:center">
+            <img src="images/NCA_Logo1.jpg" style="height: 175px;" />
+            <a href="/wiki/NCA">Nova Castellum Alliance</a>
+        </div>
+    </li>
+    <li>
+        <div style="display: flex; flex-direction: column; align-items:center">
+            <img src="images/AD_Logo1.jpg" style="height: 175px;" />
+            <a href="/wiki/AD">Aurvandil Dominion</a>
+        </div>
+    </li>
+    <li>
+        <div style="display: flex; flex-direction: column; align-items:center">
+            <img src="images/TSC_Logo2.jpg" style="height: 175px;" />
+            <a href="/wiki/TSC">Tekton Synthetics Collective</a>
+        </div>
+    </li>
+    <li>
+        <div style="display: flex; flex-direction: column; align-items:center">
+            <img src="images/IIC_Logo1.jpg" style="height: 175px;" />
+            <a href="/wiki/IIC">Interstellar Industrial Consortium</a>
+        </div>
+    </li>
+    <li>
+        <div style="display: flex; flex-direction: column; align-items:center">
+            <img src="images/Khrontar_Logo1.jpg" style="height: 175px;" />
+            <a href="/wiki/KE">Khrontar Empire</a>
+        </div>
+    </li>
+    <li>
+        <div style="display: flex; flex-direction: column; align-items:center">
+            <img src="images/Vodrun_Logo1.jpg" style="height: 175px;" />
+            <a href="/wiki/VAS">Vodrun Aligned Systems</a>
+        </div>
+    </li>
+    <li>
+        <div style="display: flex; flex-direction: column; align-items:center">
+            <img src="images/Threx_Logo1.jpg" style="height: 175px;" />
+            <a href="/wiki/TE">Threx Empire</a>
+        </div>
+    </li>
+    <li>
+        <div style="display: flex; flex-direction: column; align-items:center">
+            <img src="images/Dhekorr_Logo1.jpg" style="height: 175px;" />
+            <a href="/wiki/DS">Dhekorr Syndicates</a>
+        </div>
+    </li>
+    
+    <!-- Add more images as needed -->
+</ul>
+
+
+@code {
+
+}
