@@ -1,6 +1,12 @@
-﻿<div class="top-row ps-3 navbar navbar-dark">
+﻿@using System.Net.Http 
+@using System.Net.Http.Json 
+@using BlazorWebAssembly.Models
+@inject HttpClient Http 
+@inject NavigationManager Navigation
+
+<div class="top-row ps-3 navbar navbar-dark">
     <div class="container-fluid">
-        <a class="navbar-brand" href="">BlazorWebAssembly</a>
+        <a class="navbar-brand" href="">Cosmic Starfront Wiki</a>
         <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -8,7 +14,14 @@
 </div>
 
 <div class="@NavMenuCssClass nav-scrollable" @onclick="ToggleNavMenu">
-    <nav class="nav flex-column">
+    <nav class="nav flex-column" style="margin: 10px;">
+        <EditForm Model="@searchModel" OnValidSubmit="@HandleSearch">
+            <div> 
+                <label for="searchQuery">Search:</label> 
+                <InputText id="searchQuery" @bind-Value="searchModel.Query" /> 
+                <button type="submit">Search</button> 
+            </div> 
+        </EditForm>
         @* <div class="nav-item px-3">
             <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
                 <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Home
@@ -36,4 +49,18 @@
     {
         collapseNavMenu = !collapseNavMenu;
     }
+
+    private SearchModel searchModel = new SearchModel();
+
+    private async Task HandleSearch()
+    {
+        var result = await Http.GetAsync($"https://localhost:7002/pages/get?name={searchModel.Query}");
+        if (result != null) { Navigation.NavigateTo($"/wiki/{searchModel.Query}"); }
+        else
+        { // Handle the case where no result is found 
+            Navigation.NavigateTo("/not-found"); 
+        } 
+    }
+
+    public class SearchModel { public string Query { get; set; } }
 }

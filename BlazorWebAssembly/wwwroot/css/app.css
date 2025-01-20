@@ -112,3 +112,43 @@ code {
 .form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
     text-align: start;
 }
+
+
+.flex1 {
+    display: flex;
+    justify-content: space-between;
+    background-color: grey;
+    border: 1px;
+    margin: 10px;
+    padding: 10px
+}
+
+.flex2 {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+    .flex2 > img {
+        height: 175px;
+    }
+
+.image-grid {
+    list-style-type: none; /* Remove list bullets */
+    padding: 0; /* Remove default padding */
+    display: flex;
+    flex-wrap: wrap; /* Allow items to wrap to the next line */
+    gap: 10px; /* Space between grid items */
+}
+
+    .image-grid li {
+        flex: 1 1 250px; /* Each item will take up at least 200px, but can grow */
+        margin: 10px;
+        box-sizing: border-box;
+    }
+
+    .image-grid img {
+        max-width: 100%; /* Ensure images fit within their container */
+        height: 250px; /* Maintain aspect ratio */
+        display: block;
+    }

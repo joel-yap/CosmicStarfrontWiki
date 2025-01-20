@@ -23,6 +23,7 @@ public static class WikiApi
         pageGroup.MapPut("/add", AddPage);
         pageGroup.MapGet("/get", GetPage);
         pageGroup.MapGet("/getall", GetPages);
+        pageGroup.MapGet("/getpagescate", GetPagesByCategory);
         pageGroup.MapPut("/editpage", EditPage);
         pageGroup.MapPut("/editsection", EditSection);
         pageGroup.MapPut("/editcontent", EditContent);
@@ -170,7 +171,23 @@ public static class WikiApi
             pages = context.WikiPages.ToList();
         }
         return Results.Ok(pages);
+    }
 
+    public static IResult GetPagesByCategory(Category category)
+    {
+        var pages = new List<WikiPage>();
+
+        using (var context = new AppDbContext())
+        {
+            pages = context.WikiPages.ToList();
+        }
+        var searchResult = pages.Where(f => f.Category == category).ToList();
+        List<string> result = new List<string>();
+        foreach(var page in searchResult)
+        {
+            result.Add(page.Title);
+        }
+        return Results.Ok(result);
     }
 
     public static IResult EditPage(string title, string newTitle)
