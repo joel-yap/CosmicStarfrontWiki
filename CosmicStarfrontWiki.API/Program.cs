@@ -20,12 +20,10 @@ builder.Services.AddCors(options =>
     });
 });
 
-
 var app = builder.Build();
 
 // Apply the CORS policy
 app.UseCors("AllowSpecificOrigins");
-
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

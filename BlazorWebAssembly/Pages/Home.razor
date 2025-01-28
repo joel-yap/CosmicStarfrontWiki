@@ -1,4 +1,6 @@
 ﻿@page "/"
+@using BlazorWebAssembly.Models
+@using BlazorWebAssembly.Services
 @{
     string HomeTitle = "Cosmic Starfront Wiki";
 }
@@ -9,51 +11,35 @@
 
 <p>Welcome to the official Cosmic Starfront Wiki, the official resource for the game.</p>
 
-<div class="flex1">
-    <div class="flex2">
-        <img src="images/BountyHunter.jpg"/>
-        <a href="/Characters">Characters</a>
+@if (panels != null) {
+    <div class="flex1">
+        @foreach (var panel in panels)
+        {
+            if (panel.Box == 0) {
+                <div class="flex2">
+                    <img src=@panel.Image />
+                    <a href=@panel.Link>@panel.Name</a>
+                </div>
+            }
+        }
     </div>
-    <div class="flex2">
-        <img src="images/Alien Soldier.jpg"/>
-        Enemies
-    </div>
-    <div class="flex2">
-        <img src="images/Energy Rifle.jpg"/>
-        Weapons
-    </div>
-    <div class="flex2">
-        <img src="images/PowerArmour1.png"/>
-        Armour
-    </div>
-    <div class="flex2">
-        <img src="images/ScanningDevice.jpg"/>
-        Technology
-    </div>
-    <div class="flex2">
-        <img src="images/BlueHolographicPlanet.jpg"/>
-        Missions
-    </div>
-</div>
+}
 
-<div class="flex1">
-    <div class="flex2">
-        <img src="images/NCA_Logo1.jpg"/>
-        <a href="/Factions">Factions</a>
+@if (panels != null)
+{
+    <div class="flex1">
+        @foreach (var panel in panels)
+        {
+            if (panel.Box == 1)
+            {
+                <div class="flex2">
+                    <img src=@panel.Image />
+                    <a href=@panel.Link>@panel.Name</a>
+                </div>
+            }
+        }
     </div>
-    <div class="flex2">
-        <img src="images/Tank1.jpg" />
-        Vehicles
-    </div>
-    <div class="flex2">
-        <img src="images/Moonbase1.jpg"/>
-        Locations
-    </div>
-    <div class="flex2">
-        <img src="images/SpaceshipInterior.jpg"/>
-        History
-    </div>
-</div>
+}
 
 <div class="flex1">
     News
@@ -62,3 +48,11 @@
 <div class="flex1">
     Links
 </div>
+
+@code {
+    public List<PanelDTO>? panels;
+    protected override async Task OnParametersSetAsync()
+    {
+        panels = await PageService.GetPanels(0);
+    }
+}

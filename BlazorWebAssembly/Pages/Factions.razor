@@ -1,4 +1,7 @@
 ﻿@page "/Factions"
+@using BlazorWebAssembly.Enums
+@using BlazorWebAssembly.Models
+@using BlazorWebAssembly.Services
 @{
     string Title = "Factions";
 }
@@ -7,30 +10,18 @@
 
 
 <ul class="image-grid">
-    <li>
-        <div class="flex2">
-            <img src="images/NCA_Logo1.jpg"/>
-            <a href="/wiki/NCA">Nova Castellum Alliance</a>
-        </div>
-    </li>
-    <li>
-        <div class="flex2">
-            <img src="images/AD_Logo1.jpg"/>
-            <a href="/wiki/AD">Aurvandil Dominion</a>
-        </div>
-    </li>
-    <li>
-        <div class="flex2">
-            <img src="images/TSC_Logo2.jpg"/>
-            <a href="/wiki/TSC">Tekton Synthetics Collective</a>
-        </div>
-    </li>
-    <li>
-        <div class="flex2">
-            <img src="images/IIC_Logo1.jpg"/>
-            <a href="/wiki/IIC">Interstellar Industrial Consortium</a>
-        </div>
-    </li>
+    @if (ResultCategory != null)
+    {
+        @foreach (var faction in ResultCategory)
+        {
+            <li>
+                <div class="flex2">
+                    <img src="@(faction.Image)" class="character-portrait" />
+                    <a href="/wiki/@(faction.Title)">@faction.Title</a>
+                </div>
+            </li>
+        }
+    }
     <li>
         <div class="flex2">
             <img src="images/Khrontar_Logo1.jpg"/>
@@ -74,6 +65,4 @@
 </ul>
 
 
-@code {
 
-}

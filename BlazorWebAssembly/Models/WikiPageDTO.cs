@@ -4,7 +4,6 @@ namespace BlazorWebAssembly.Models;
 
 public class WikiPageDTO
 {
-    //public int Id { get; set; }
     public required Category Category { get; set; }
     public required string Title { get; set; }
     public List<SectionDTO> Sections { get; set; } = new List<SectionDTO>();

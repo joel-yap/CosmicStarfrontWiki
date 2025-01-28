@@ -1,4 +1,7 @@
 ﻿@page "/Characters"
+@using BlazorWebAssembly.Enums
+@using BlazorWebAssembly.Models
+@using BlazorWebAssembly.Services
 @{
     string Title = "Characters";
 }
@@ -7,49 +10,17 @@
 
 <h3>Player Characters</h3>
 <ul class="image-grid">
-    <li>
-        <div class="flex2">
-            <img src="images/Kane_1.jpg" style="height: 250px;" />
-            <a href="/wiki/Kane">Kane</a>
-        </div>
-    </li>
-    <li>
-        <div class="flex2">
-            <img src="images/Sigrid_1.jpg" style="height: 250px;" />
-            <a href="/wiki/Sigrid">Sigrid</a>
-        </div>
-    </li>
-    <li>
-        <div class="flex2">
-            <img src="images/PowerArmour1.png" style="height: 250px;" />
-            <a href="/wiki/Atlas">J1-Atlas</a>
-        </div>
-    </li>
-    <li>
-        <div class="flex2">
-            <img src="images/BountyHunter.jpg" style="height: 250px;" />
-            <a href="/wiki/Bayes">Bayes</a>
-        </div>
-    </li>
-    <li>
-        <div class="flex2">
-            <img src="images/Promethean_1.jpg" style="height: 250px;" />
-            <a href="/wiki/Zyntra">Zyntra</a>
-        </div>
-    </li>
-    <li>
-        <div class="flex2">
-            <img src="images/Vorak_1.jpg" style="height: 250px;" />
-            <a href="/wiki/Vorak">Vorak</a>
-        </div>
-    </li>
-    <li>
-        <div class="flex2">
-            <img src="images/Epsilon.jpg" style="height: 250px;" />
-            <a href="/wiki/Epsilon">D4-Epsilon</a>
-        </div>
-    </li>
-    <!-- Add more images as needed -->
+    @if (ResultCategory != null) {
+        @foreach (var character in ResultCategory)
+        {
+            <li>
+                <div class="flex2">
+                    <img src="@(character.Image)" class="character-portrait" />
+                    <a href="/wiki/@(character.Title)">@character.Title</a>
+                </div>
+            </li>
+        }
+    }
 </ul>
 <hr />
 <h3>Supporting Characters</h3>
@@ -120,6 +91,4 @@
     </li>
 </ul>
 
-@code {
 
-}

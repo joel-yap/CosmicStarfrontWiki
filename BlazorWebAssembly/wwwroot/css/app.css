@@ -152,3 +152,12 @@ code {
         height: 250px; /* Maintain aspect ratio */
         display: block;
     }
+
+.character-portrait {
+    height: 250px;
+}
+
+.flex-space {
+    display: flex;
+    justify-content: space-between;
+}

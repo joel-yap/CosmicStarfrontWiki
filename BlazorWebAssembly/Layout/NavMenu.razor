@@ -1,8 +1,8 @@
 ﻿@using System.Net.Http 
 @using System.Net.Http.Json 
 @using BlazorWebAssembly.Models
-@inject HttpClient Http 
-@inject NavigationManager Navigation
+@inject HttpClient HttpClient 
+@inject NavigationManager NavigationManager
 
 <div class="top-row ps-3 navbar navbar-dark">
     <div class="container-fluid">
@@ -14,7 +14,7 @@
 </div>
 
 <div class="@NavMenuCssClass nav-scrollable" @onclick="ToggleNavMenu">
-    <nav class="nav flex-column" style="margin: 10px;">
+    <nav class="nav flex-column, p-3">
         <EditForm Model="@searchModel" OnValidSubmit="@HandleSearch">
             <div> 
                 <label for="searchQuery">Search:</label> 
@@ -22,21 +22,6 @@
                 <button type="submit">Search</button> 
             </div> 
         </EditForm>
-        @* <div class="nav-item px-3">
-            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Home
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="counter">
-                <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Counter
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="weather">
-                <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Weather
-            </NavLink>
-        </div> *@
     </nav>
 </div>
 
@@ -54,11 +39,15 @@
 
     private async Task HandleSearch()
     {
-        var result = await Http.GetAsync($"https://localhost:7002/pages/get?name={searchModel.Query}");
-        if (result != null) { Navigation.NavigateTo($"/wiki/{searchModel.Query}"); }
+        var result = await HttpClient.GetAsync($"https://localhost:7002/pages/get?name={searchModel.Query}");
+
+        if (result != null) 
+        { 
+            NavigationManager.NavigateTo($"/wiki/{searchModel.Query}"); 
+        }
         else
         { // Handle the case where no result is found 
-            Navigation.NavigateTo("/not-found"); 
+            NavigationManager.NavigateTo("/not-found"); 
         } 
     }
 

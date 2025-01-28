@@ -4,15 +4,14 @@
 @if (ResultPage != null) 
 {
     <PageTitle>@ResultPage.Title</PageTitle>
-    if (ResultPage.Image != null) {
-        <img src=@ResultPage.Image style=@ResultPage.ImageStyle />
-    }
     <div>
         @foreach (var pageSection in ResultPage.Sections)
         {
-            if (sectionCounter == 0) {
+            if (sectionCounter == 0) 
+            {
                 <h1>@pageSection.Header</h1>
-            } else {
+            } else 
+            {
                 <h3>@pageSection.Header</h3>
             }
             sectionCounter++;
@@ -20,7 +19,7 @@
             foreach (var content in pageSection.Contents)
             {
                 <h4><b>@content.Subheader</b></h4>
-                <div style="display: flex; justify-content: space-between">
+                <div class="flex-space">
                     <p>
                         @((MarkupString)content.Text)
                     </p>
@@ -31,7 +30,8 @@
                 </div>
             }
         }
-        @if (ResultPage.Gallery != null) {
+        @if (ResultPage.Gallery != null) 
+        {
             <h4><b>Gallery</b></h4>
             <hr />
             <div style="display: flex; width: 100%">
@@ -56,18 +56,19 @@
             <tr>
                 <td>
                     @for (int i = 0; i < ResultCategory.Count; i++)
-                        {
+                    {
                         <a href="/wiki/@ResultCategory[i]">@ResultCategory[i]</a>
-                        @if (i < ResultCategory.Count - 1) {
+                        @if (i < ResultCategory.Count - 1) 
+                        {
                             <span> . </span>
                         }
                     }
                 </td>
             </tr>
         </table>
-        
     </div>
-} else 
+} 
+else 
 {
     <div>Loading...</div>
 }

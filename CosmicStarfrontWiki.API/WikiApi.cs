@@ -23,12 +23,14 @@ public static class WikiApi
         pageGroup.MapPut("/add", AddPage);
         pageGroup.MapGet("/get", GetPage);
         pageGroup.MapGet("/getall", GetPages);
-        pageGroup.MapGet("/getpagescate", GetPagesByCategory);
+        pageGroup.MapGet("/getpagescateg", GetPagesByCategory);
+        pageGroup.MapGet("/getpagetitlescateg", GetPageTitlesByCategory);
         pageGroup.MapPut("/editpage", EditPage);
         pageGroup.MapPut("/editsection", EditSection);
         pageGroup.MapPut("/editcontent", EditContent);
         pageGroup.MapPut("/editgallery", EditGallery);
-
+        pageGroup.MapPut("/addpanel", AddPanel);
+        pageGroup.MapGet("/getpanels", GetPanels);
     }
 
     public static IResult GetPage(string name)
@@ -162,6 +164,44 @@ public static class WikiApi
         return Results.Ok();
     }
 
+    public static IResult AddPanel(PanelDTO panel)
+    {
+        PagePanel newPanel = new PagePanel();
+        newPanel.PageId = panel.PageId;
+        newPanel.BoxId = panel.Box;
+        newPanel.PanelName = panel.Name;
+        newPanel.Image = panel.Image;
+        newPanel.Link = panel.Link;
+        using (var context = new AppDbContext())
+        {
+            context.Add(newPanel);
+            context.SaveChanges();
+        }
+        return Results.Ok();
+    }
+
+    public static IResult GetPanels(int page)
+    {
+        var panels = new List<PagePanel>();
+        using (var context = new AppDbContext()) 
+        {
+            panels = context.PagePanels.ToList();
+        }
+        var panels2 = panels.Where(p => p.PageId == page).ToList();
+        var results = new List<PanelDTO>();
+        foreach(var panel in panels2)
+        {
+            var result = new PanelDTO();
+            result.PageId = panel.PageId;
+            result.Box = panel.BoxId;
+            result.Image = panel.Image;
+            result.Link = panel.Link;
+            result.Name = panel.PanelName;
+            results.Add(result);
+        }
+        return Results.Ok(results);
+    }
+
     public static IResult GetPages()
     {
         var pages = new List<WikiPage>();
@@ -173,7 +213,7 @@ public static class WikiApi
         return Results.Ok(pages);
     }
 
-    public static IResult GetPagesByCategory(Category category)
+    public static IResult GetPageTitlesByCategory(Category category)
     {
         var pages = new List<WikiPage>();
 
@@ -188,6 +228,73 @@ public static class WikiApi
             result.Add(page.Title);
         }
         return Results.Ok(result);
+    }
+
+    public static IResult GetPagesByCategory(Category category)
+    {
+        var pages = new List<WikiPage>();
+        var results = new List<WikiPageDTO>();
+        var sections = new List<Section>();
+        var contents = new List<Content>();
+        var galleries = new List<Gallery>();
+
+        using (var context = new AppDbContext())
+        {
+            pages = context.WikiPages.ToList();
+            sections = context.Sections.ToList();
+            contents = context.Contents.ToList();
+            galleries = context.Galleries.ToList();
+        }
+        var searchResult = pages.Where(f => f.Category == category).ToList();
+
+        foreach (var page in searchResult)
+        {
+            var result = new WikiPageDTO
+            {
+                Category = page.Category,
+                Title = page.Title,
+                Image = page.Image,
+                ImageStyle = page.ImageStyle,
+            };
+            var searchSections = sections.Where(s => s.WikiPageId == page.Id).OrderBy(s => s.Order).ToList();
+            var resultSections = new List<SectionDTO>();
+            foreach (var section in searchSections)
+            {
+                var newSectionDTO = new SectionDTO
+                {
+                    Header = section.Header,
+                };
+                resultSections.Add(newSectionDTO);
+                var searchContents = contents.Where(c => c.SectionId == section.Id).OrderBy(c => c.Order).ToList();
+                var resultContents = new List<ContentDTO>();
+                foreach (var content in searchContents)
+                {
+                    var newContentDTO = new ContentDTO
+                    {
+                        Text = content.Text,
+                        Subheader = content.Subheader,
+                        Image = content.Image,
+                        ImageStyle = content.ImageStyle,
+                    };
+                    resultContents.Add(newContentDTO);
+                }
+                newSectionDTO.Contents = resultContents;
+            }
+            result.Sections = resultSections;
+            var searchGalleries = galleries.Where(g => g.WikiPageId == page.Id).SingleOrDefault();
+            if (searchGalleries != null)
+            {
+                var resultGallery = new GalleryDTO
+                {
+                    Images = searchGalleries.Images,
+                    ImageStyles = searchGalleries.ImageStyles,
+                    Captions = searchGalleries.Captions,
+                };
+                result.Gallery = resultGallery;
+            }
+            results.Add(result);
+        }
+        return Results.Ok(results);
     }
 
     public static IResult EditPage(string title, string newTitle)
@@ -327,6 +434,15 @@ public class GalleryDTO
     public List<string>? Images { get; set; }
     public List<string>? ImageStyles { get; set; }
     public List<string>? Captions { get; set; }
+}
+
+public class PanelDTO
+{
+    public int? PageId { get; set; }
+    public int? Box {  get; set; }
+    public string? Image { get; set; }
+    public string? Name { get; set; }
+    public string? Link { get; set; }
 }
 
 
