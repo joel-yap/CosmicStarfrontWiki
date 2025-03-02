@@ -3,7 +3,6 @@
 @using BlazorWebAssembly.Models
 @using System.Net.Http
 @using System.Net.Http.Json
-@inject HttpClient HttpClient
 
 <h3>Add New Page</h3>
 
@@ -58,7 +57,8 @@
 
     <button type="button" @onclick="AddSection">Add Section</button> 
     <br />
-    <button type="submit">Add Page</button>
+    <button type="submit" @onclick="NotifyUser">Add Page</button>
+    <p>@_notificationMessage</p>
 </EditForm>
 
 

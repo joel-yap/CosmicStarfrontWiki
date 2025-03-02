@@ -16,7 +16,11 @@ public partial class WikiPage
     [Parameter]
     public required Category Category { get; set; }
 
+    [Inject]
+    private PageService PageService { get; set; } = default!;
+
     int sectionCounter = 0;
+
     protected override async Task OnParametersSetAsync()
     {
         var page = await PageService.GetWikiPage(Name);

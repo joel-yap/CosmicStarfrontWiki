@@ -1,6 +1,4 @@
 using CosmicStarfrontWiki.API;
-using CosmicStarfrontWiki.Data;
-using CosmicStarfrontWiki.Model;
 
 var builder = WebApplication.CreateBuilder(args);
 

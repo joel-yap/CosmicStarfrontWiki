@@ -1,15 +1,7 @@
 ﻿using CosmicStarfrontWiki.Data;
 using CosmicStarfrontWiki.Model;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.OpenApi.Services;
-using Microsoft.VisualBasic;
-using System;
-using System.ComponentModel.DataAnnotations;
-using System.Security.AccessControl;
-using System.Text.Json;
 using System.Xml.Linq;
-using static System.Collections.Specialized.BitVector32;
-using Section = CosmicStarfrontWiki.Model.Section;
 
 namespace CosmicStarfrontWiki.API;
 
@@ -17,89 +9,96 @@ public static class WikiApi
 {
     public static void MapWikiEndpoints(this IEndpointRouteBuilder endpoints)
     {
-
         var pageGroup = endpoints.MapGroup("/pages").WithTags("Pages");
 
-        pageGroup.MapPut("/add", AddPage);
-        pageGroup.MapGet("/get", GetPage);
-        pageGroup.MapGet("/getall", GetPages);
-        pageGroup.MapGet("/getpagescateg", GetPagesByCategory);
-        pageGroup.MapGet("/getpagetitlescateg", GetPageTitlesByCategory);
-        pageGroup.MapPut("/editpage", EditPage);
-        pageGroup.MapPut("/editsection", EditSection);
-        pageGroup.MapPut("/editcontent", EditContent);
-        pageGroup.MapPut("/editgallery", EditGallery);
-        pageGroup.MapPut("/addpanel", AddPanel);
-        pageGroup.MapGet("/getpanels", GetPanels);
+        pageGroup.MapPost("/", AddPage);
+        pageGroup.MapGet("/{name}", GetPage);
+        pageGroup.MapGet("/", GetPages);
+        pageGroup.MapGet("/title", GetPageTitles);
+        pageGroup.MapGet("/search/{name}", SearchPages);
+
+        //pageGroup.MapPut("/editpage", EditPage);
+        //pageGroup.MapPut("/editsection", EditSection);
+        //pageGroup.MapPut("/editcontent", EditContent);
+        //pageGroup.MapPut("/editgallery", EditGallery);
+        //pageGroup.MapPut("/addpanel", AddPanel);
+        pageGroup.MapGet("/panel", GetPanels);
     }
 
     public static IResult GetPage(string name)
     {
-        var pages = new List<WikiPage>();
-        var sections = new List<Section>();
-        var contents = new List<Content>();
-        var galleries = new List<Gallery>();
+        using var context = new AppDbContext();
 
-        using (var context = new AppDbContext())
+        var wikiPage = context.WikiPages
+            .Include(x => x.Sections)
+            .ThenInclude(y => y.Contents)
+            .Include(x => x.Gallery)
+            .ToList()
+            .Where(x => x.Title == name)
+            .SingleOrDefault();
+
+        if (wikiPage != null) 
         {
-            pages = context.WikiPages.ToList();
-            sections = context.Sections.ToList();
-            contents = context.Contents.ToList();
-            galleries = context.Galleries.ToList();
-        }
-
-        var searchResult = pages.Where(f => f.Title == name).SingleOrDefault();
-
-        if (searchResult != null)
-        {
-            var result = new WikiPageDTO
-            {
-                Category = searchResult.Category,
-                Title = searchResult.Title,
-                Image = searchResult.Image,
-                ImageStyle = searchResult.ImageStyle,
-            };
-            var searchSections = sections.Where(s => s.WikiPageId == searchResult.Id).OrderBy(s => s.Order).ToList();
-            var resultSections = new List<SectionDTO>();
-            foreach (var section in searchSections) 
-            {
-                var newSectionDTO = new SectionDTO
-                {
-                    Header = section.Header,
-                };
-                resultSections.Add(newSectionDTO);
-                var searchContents = contents.Where(c => c.SectionId == section.Id).OrderBy(c => c.Order).ToList();
-                var resultContents = new List<ContentDTO>();
-                foreach (var content in searchContents)
-                {
-                    var newContentDTO = new ContentDTO
-                    {
-                        Text = content.Text,
-                        Subheader = content.Subheader,
-                        Image = content.Image,
-                        ImageStyle = content.ImageStyle,
-                    };
-                    resultContents.Add(newContentDTO);
-                }
-                newSectionDTO.Contents = resultContents;
-            }
-            result.Sections = resultSections;
-            var searchGalleries = galleries.Where(g => g.WikiPageId == searchResult.Id).SingleOrDefault();
-            if (searchGalleries != null) {
-                var resultGallery = new GalleryDTO
-                {
-                    Images = searchGalleries.Images,
-                    ImageStyles = searchGalleries.ImageStyles,
-                    Captions = searchGalleries.Captions,
-                };
-                result.Gallery = resultGallery;
-            }
-
-            return Results.Ok(result);
+            return Results.Ok(CreateWikiPageDTO(wikiPage));
         }
         else
         {
             return Results.BadRequest($"The page {name} does not exist.");
+        }
+    }
+
+    public static IResult GetPageTitles(Category? category)
+    {
+        using var context = new AppDbContext();
+
+        var pages = new List<WikiPage>();
+        var results = new List<string>();
+
+        if (category != null) 
+        {
+            pages = context.WikiPages
+                .Where(x => x.Category == category)
+                .ToList();
+        } else
+        {
+            pages = context.WikiPages
+                .ToList();
+        }
+        
+        if (pages != null)
+        {
+            foreach (var page in pages)
+            {
+                results.Add(page.Title);
+            }
+        }
+        return Results.Ok(results);
+    }
+
+    public static IResult SearchPages(string name)
+    {
+        using var context = new AppDbContext();
+
+        var wikiPages = context.WikiPages
+            .Where(x => x.Title.ToUpper().Contains(name.ToUpper()))
+            .Include(x => x.Sections)
+            .ThenInclude(y => y.Contents)
+            .Include(x => x.Gallery)
+            .ToList();
+
+        var results = new List<WikiPageDTO>();
+
+        if (wikiPages.Count > 0)
+        {
+            foreach (var page in wikiPages)
+            {
+                results.Add(CreateWikiPageDTO(page));
+            }
+            return Results.Ok(results);
+        }
+        else
+        {
+            return Results.BadRequest("No matching pages.");
         }
     }
 
@@ -150,7 +149,7 @@ public static class WikiApi
                                 Section = section,
                                 Order = contentOrder++,
                                 Image = contentDTO.Image,
-                                ImageStyle=contentDTO.ImageStyle,
+                                ImageStyle = contentDTO.ImageStyle,
                             };
                             contentList.Add(newContent);
                         }
@@ -164,21 +163,21 @@ public static class WikiApi
         return Results.Ok();
     }
 
-    public static IResult AddPanel(PanelDTO panel)
-    {
-        PagePanel newPanel = new PagePanel();
-        newPanel.PageId = panel.PageId;
-        newPanel.BoxId = panel.Box;
-        newPanel.PanelName = panel.Name;
-        newPanel.Image = panel.Image;
-        newPanel.Link = panel.Link;
-        using (var context = new AppDbContext())
-        {
-            context.Add(newPanel);
-            context.SaveChanges();
-        }
-        return Results.Ok();
-    }
+    //public static IResult AddPanel(PanelDTO panel)
+    //{
+    //    PagePanel newPanel = new PagePanel();
+    //    newPanel.PageId = panel.PageId;
+    //    newPanel.BoxId = panel.Box;
+    //    newPanel.PanelName = panel.Name;
+    //    newPanel.Image = panel.Image;
+    //    newPanel.Link = panel.Link;
+    //    using (var context = new AppDbContext())
+    //    {
+    //        context.Add(newPanel);
+    //        context.SaveChanges();
+    //    }
+    //    return Results.Ok();
+    //}
 
     public static IResult GetPanels(int page)
     {
@@ -202,101 +201,167 @@ public static class WikiApi
         return Results.Ok(results);
     }
 
-    public static IResult GetPages()
-    {
-        var pages = new List<WikiPage>();
-
-        using (var context = new AppDbContext())
-        {
-            pages = context.WikiPages.ToList();
-        }
-        return Results.Ok(pages);
-    }
-
-    public static IResult GetPageTitlesByCategory(Category category)
-    {
-        var pages = new List<WikiPage>();
-
-        using (var context = new AppDbContext())
-        {
-            pages = context.WikiPages.ToList();
-        }
-        var searchResult = pages.Where(f => f.Category == category).ToList();
-        List<string> result = new List<string>();
-        foreach(var page in searchResult)
-        {
-            result.Add(page.Title);
-        }
-        return Results.Ok(result);
-    }
-
-    public static IResult GetPagesByCategory(Category category)
+    public static IResult GetPages(Category? category)
     {
         var pages = new List<WikiPage>();
         var results = new List<WikiPageDTO>();
-        var sections = new List<Section>();
-        var contents = new List<Content>();
-        var galleries = new List<Gallery>();
 
         using (var context = new AppDbContext())
         {
-            pages = context.WikiPages.ToList();
-            sections = context.Sections.ToList();
-            contents = context.Contents.ToList();
-            galleries = context.Galleries.ToList();
-        }
-        var searchResult = pages.Where(f => f.Category == category).ToList();
+            if (category != null)
+            {
+                pages = context.WikiPages.Where(x => x.Category == category)
+                    .Include(x => x.Sections)
+                    .ThenInclude(y => y.Contents)
+                    .Include(x => x.Gallery)
+                    .ToList();
+            }
+            else
+            {
+                pages = context.WikiPages
+                .Include(x => x.Sections)
+                .ThenInclude(y => y.Contents)
+                .Include(x => x.Gallery)
+                .ToList();
+            }
 
-        foreach (var page in searchResult)
-        {
-            var result = new WikiPageDTO
+            if (pages != null)
             {
-                Category = page.Category,
-                Title = page.Title,
-                Image = page.Image,
-                ImageStyle = page.ImageStyle,
-            };
-            var searchSections = sections.Where(s => s.WikiPageId == page.Id).OrderBy(s => s.Order).ToList();
-            var resultSections = new List<SectionDTO>();
-            foreach (var section in searchSections)
-            {
-                var newSectionDTO = new SectionDTO
+                foreach (var page in pages)
                 {
-                    Header = section.Header,
-                };
-                resultSections.Add(newSectionDTO);
-                var searchContents = contents.Where(c => c.SectionId == section.Id).OrderBy(c => c.Order).ToList();
-                var resultContents = new List<ContentDTO>();
-                foreach (var content in searchContents)
-                {
-                    var newContentDTO = new ContentDTO
-                    {
-                        Text = content.Text,
-                        Subheader = content.Subheader,
-                        Image = content.Image,
-                        ImageStyle = content.ImageStyle,
-                    };
-                    resultContents.Add(newContentDTO);
+                    results.Add(CreateWikiPageDTO(page));
                 }
-                newSectionDTO.Contents = resultContents;
             }
-            result.Sections = resultSections;
-            var searchGalleries = galleries.Where(g => g.WikiPageId == page.Id).SingleOrDefault();
-            if (searchGalleries != null)
-            {
-                var resultGallery = new GalleryDTO
-                {
-                    Images = searchGalleries.Images,
-                    ImageStyles = searchGalleries.ImageStyles,
-                    Captions = searchGalleries.Captions,
-                };
-                result.Gallery = resultGallery;
-            }
-            results.Add(result);
         }
         return Results.Ok(results);
     }
 
+    public static WikiPageDTO CreateWikiPageDTO(WikiPage page)
+    {
+        var result = new WikiPageDTO
+        {
+            Category = page.Category,
+            Title = page.Title,
+            Image = page.Image,
+            ImageStyle = page.ImageStyle,
+            Sections = page.Sections
+                .OrderBy(x => x.Order)
+                .Select(x =>
+                    new SectionDTO
+                    {
+                        Header = x.Header,
+                        Contents = x.Contents
+                            .OrderBy(y => y.Order)
+                            .Select(y =>
+                                new ContentDTO
+                                {
+                                    Text = y.Text,
+                                    Subheader = y.Subheader,
+                                    Image = y.Image,
+                                    ImageStyle = y.ImageStyle,
+                                }
+                            )
+                            .ToList()
+                    }
+                )
+                .ToList(),
+            Gallery = page.Gallery != null
+                ? new GalleryDTO
+                {
+                    Images = page.Gallery.Images,
+                    ImageStyles = page.Gallery.ImageStyles,
+                    Captions = page.Gallery.Captions,
+                }
+                : null
+        };
+        return result;
+    }
+
+    //public static IResult GetPageTitlesByCategory(Category category)
+    //{
+    //    var pages = new List<WikiPage>();
+
+    //    using (var context = new AppDbContext())
+    //    {
+    //        pages = context.WikiPages.ToList();
+    //    }
+    //    var searchResult = pages.Where(f => f.Category == category).ToList();
+    //    List<string> result = new List<string>();
+    //    foreach(var page in searchResult)
+    //    {
+    //        result.Add(page.Title);
+    //    }
+    //    return Results.Ok(result);
+    //}
+
+    //public static IResult GetPagesByCategory(Category category)
+    //{
+    //    var pages = new List<WikiPage>();
+    //    var results = new List<WikiPageDTO>();
+    //    var sections = new List<Section>();
+    //    var contents = new List<Content>();
+    //    var galleries = new List<Gallery>();
+
+    //    using (var context = new AppDbContext())
+    //    {
+    //        pages = context.WikiPages.ToList();
+    //        sections = context.Sections.ToList();
+    //        contents = context.Contents.ToList();
+    //        galleries = context.Galleries.ToList();
+    //    }
+    //    var searchResult = pages.Where(f => f.Category == category).ToList();
+
+    //    foreach (var page in searchResult)
+    //    {
+    //        var result = new WikiPageDTO
+    //        {
+    //            Category = page.Category,
+    //            Title = page.Title,
+    //            Image = page.Image,
+    //            ImageStyle = page.ImageStyle,
+    //        };
+    //        var searchSections = sections.Where(s => s.WikiPageId == page.Id).OrderBy(s => s.Order).ToList();
+    //        var resultSections = new List<SectionDTO>();
+    //        foreach (var section in searchSections)
+    //        {
+    //            var newSectionDTO = new SectionDTO
+    //            {
+    //                Header = section.Header,
+    //            };
+    //            resultSections.Add(newSectionDTO);
+    //            var searchContents = contents.Where(c => c.SectionId == section.Id).OrderBy(c => c.Order).ToList();
+    //            var resultContents = new List<ContentDTO>();
+    //            foreach (var content in searchContents)
+    //            {
+    //                var newContentDTO = new ContentDTO
+    //                {
+    //                    Text = content.Text,
+    //                    Subheader = content.Subheader,
+    //                    Image = content.Image,
+    //                    ImageStyle = content.ImageStyle,
+    //                };
+    //                resultContents.Add(newContentDTO);
+    //            }
+    //            newSectionDTO.Contents = resultContents;
+    //        }
+    //        result.Sections = resultSections;
+    //        var searchGalleries = galleries.Where(g => g.WikiPageId == page.Id).SingleOrDefault();
+    //        if (searchGalleries != null)
+    //        {
+    //            var resultGallery = new GalleryDTO
+    //            {
+    //                Images = searchGalleries.Images,
+    //                ImageStyles = searchGalleries.ImageStyles,
+    //                Captions = searchGalleries.Captions,
+    //            };
+    //            result.Gallery = resultGallery;
+    //        }
+    //        results.Add(result);
+    //    }
+    //    return Results.Ok(results);
+    //}
+
+    //All four Edit methods not implemented yet
     public static IResult EditPage(string title, string newTitle)
     {
         using (var context = new AppDbContext())
@@ -318,20 +383,24 @@ public static class WikiApi
 
     public static IResult EditSection(int pageID, int order, string newHeader)
     {
-        using (var context = new AppDbContext())
+        using var context = new AppDbContext();
+
+        var sections = context.Sections.ToList();
+        var searchResult = sections
+            .Where(x => x.WikiPageId == pageID)
+            .Where(x => x.Order == order)
+            .SingleOrDefault();
+
+        if (searchResult != null)
         {
-            var sections = context.Sections.ToList();
-            var searchResult = sections.Where(f => f.WikiPageId == pageID && f.Order == order).SingleOrDefault();
-            if (searchResult != null) 
-            {
-                searchResult.Header = newHeader;
-                context.SaveChanges();
-                return Results.Ok(searchResult.Header);
-            }
-            else
-            {
-                 return Results.NotFound();
-            }
+            searchResult.Header = newHeader;
+            context.SaveChanges();
+
+            return Results.Ok(searchResult.Header);
+        }
+        else
+        {
+            return Results.NotFound();
         }
     }
 

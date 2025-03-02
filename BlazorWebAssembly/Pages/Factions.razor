@@ -2,12 +2,8 @@
 @using BlazorWebAssembly.Enums
 @using BlazorWebAssembly.Models
 @using BlazorWebAssembly.Services
-@{
-    string Title = "Factions";
-}
 
 <h1>Factions</h1>
-
 
 <ul class="image-grid">
     @if (ResultCategory != null)
@@ -22,6 +18,7 @@
             </li>
         }
     }
+    @* To do: create dynamic pages *@
     <li>
         <div class="flex2">
             <img src="images/Khrontar_Logo1.jpg"/>

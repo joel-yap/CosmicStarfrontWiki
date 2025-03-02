@@ -1,8 +1,6 @@
 ﻿@using System.Net.Http 
 @using System.Net.Http.Json 
 @using BlazorWebAssembly.Models
-@inject HttpClient HttpClient 
-@inject NavigationManager NavigationManager
 
 <div class="top-row ps-3 navbar navbar-dark">
     <div class="container-fluid">
@@ -15,41 +13,14 @@
 
 <div class="@NavMenuCssClass nav-scrollable" @onclick="ToggleNavMenu">
     <nav class="nav flex-column, p-3">
-        <EditForm Model="@searchModel" OnValidSubmit="@HandleSearch">
+        <EditForm Model="@_searchModel" OnValidSubmit="@HandleSearch">
             <div> 
                 <label for="searchQuery">Search:</label> 
-                <InputText id="searchQuery" @bind-Value="searchModel.Query" /> 
+                <InputText id="searchQuery" @bind-Value="_searchModel.Query" /> 
                 <button type="submit">Search</button> 
             </div> 
         </EditForm>
     </nav>
 </div>
 
-@code {
-    private bool collapseNavMenu = true;
 
-    private string? NavMenuCssClass => collapseNavMenu ? "collapse" : null;
-
-    private void ToggleNavMenu()
-    {
-        collapseNavMenu = !collapseNavMenu;
-    }
-
-    private SearchModel searchModel = new SearchModel();
-
-    private async Task HandleSearch()
-    {
-        var result = await HttpClient.GetAsync($"https://localhost:7002/pages/get?name={searchModel.Query}");
-
-        if (result != null) 
-        { 
-            NavigationManager.NavigateTo($"/wiki/{searchModel.Query}"); 
-        }
-        else
-        { // Handle the case where no result is found 
-            NavigationManager.NavigateTo("/not-found"); 
-        } 
-    }
-
-    public class SearchModel { public string Query { get; set; } }
-}

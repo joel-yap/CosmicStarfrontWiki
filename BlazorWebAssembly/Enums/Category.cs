@@ -2,16 +2,16 @@
 {
     public enum Category
     {
-        Faction,
-        Character,
-        Enemy,
-        Weapon,
+        Factions,
+        Characters,
+        Enemies,
+        Weapons,
         Armour,
-        Mission,
+        Missions,
         Technology,
-        Vehicle,
-        Location,
-        Event,
+        Vehicles,
+        Locations,
+        Events,
         History
     }
 }

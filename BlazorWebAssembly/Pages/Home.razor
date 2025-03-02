@@ -1,19 +1,16 @@
 ﻿@page "/"
 @using BlazorWebAssembly.Models
 @using BlazorWebAssembly.Services
-@{
-    string HomeTitle = "Cosmic Starfront Wiki";
-}
 
-<PageTitle>@HomeTitle</PageTitle>
+<PageTitle>@HOME_TITLE</PageTitle>
 
 <h1>Cosmic Starfront Wiki</h1>
 
 <p>Welcome to the official Cosmic Starfront Wiki, the official resource for the game.</p>
 
-@if (panels != null) {
+@if (Panels != null) {
     <div class="flex1">
-        @foreach (var panel in panels)
+        @foreach (var panel in Panels)
         {
             if (panel.Box == 0) {
                 <div class="flex2">
@@ -25,10 +22,10 @@
     </div>
 }
 
-@if (panels != null)
+@if (Panels != null)
 {
     <div class="flex1">
-        @foreach (var panel in panels)
+        @foreach (var panel in Panels)
         {
             if (panel.Box == 1)
             {
@@ -49,10 +46,3 @@
     Links
 </div>
 
-@code {
-    public List<PanelDTO>? panels;
-    protected override async Task OnParametersSetAsync()
-    {
-        panels = await PageService.GetPanels(0);
-    }
-}
