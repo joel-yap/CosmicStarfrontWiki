@@ -1,0 +1,77 @@
+﻿@page "/wiki/{Name}"
+@using BlazorWebAssembly.Services
+
+@if (ResultPage != null) 
+{
+    <PageTitle>@ResultPage.Title</PageTitle>
+    <div>
+        @foreach (var pageSection in ResultPage.Sections)
+        {
+            if (sectionCounter == 0) 
+            {
+                <h1>@pageSection.Header</h1>
+            } else 
+            {
+                <h3>@pageSection.Header</h3>
+            }
+            sectionCounter++;
+            <hr />
+            foreach (var content in pageSection.Contents)
+            {
+                <h4><b>@content.Subheader</b></h4>
+                <div class="flex-space">
+                    <p>
+                        @((MarkupString)content.Text)
+                    </p>
+                    @if (content.Image != null)
+                    {
+                        <img src=@content.Image style=@content.ImageStyle />
+                    }
+                </div>
+            }
+        }
+        @if (ResultPage.Gallery != null) 
+        {
+            <h4><b>Gallery</b></h4>
+            <hr />
+            <div style="display: flex; width: 100%">
+                @for (int i = 0; i < ResultPage.Gallery.Images.Count; i++)
+                {
+                    <div>
+                        <img src=@ResultPage.Gallery.Images[i] style=@ResultPage.Gallery.ImageStyles[i] />
+                        <p style="margin-left: 10px;">@ResultPage.Gallery.Captions[i]</p>
+                    </div>
+                }
+            </div>
+
+        }
+    </div>
+    <div>
+        <table style="background-color: lightgrey">
+            <tr style="text-align: center;">
+                <td>
+                    @ResultPage.Category
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    @for (int i = 0; i < ResultCategory.Count; i++)
+                    {
+                        <a href="/wiki/@ResultCategory[i]">@ResultCategory[i]</a>
+                        @if (i < ResultCategory.Count - 1) 
+                        {
+                            <span> . </span>
+                        }
+                    }
+                </td>
+            </tr>
+        </table>
+    </div>
+} 
+else 
+{
+    <div>Loading...</div>
+}
+
+
+

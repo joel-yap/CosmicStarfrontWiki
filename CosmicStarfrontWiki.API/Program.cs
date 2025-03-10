@@ -1,29 +1,27 @@
 using CosmicStarfrontWiki.API;
-using CosmicStarfrontWiki.Data;
-using CosmicStarfrontWiki.Model;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 
+// Add CORS services to the DI container
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowSpecificOrigins", policy =>
+    {
+        policy.WithOrigins("https://localhost:7243") // Replace with your client-side URL
+              .AllowAnyHeader()
+              .AllowAnyMethod();
+    });
+});
+
 var app = builder.Build();
 
-//using var db = new AppDbContext();
-//db.Add(new Faction { Id = 2, Name = "Aurvandil Dominion", Description = "A militaristic organisation formed to fight the frequent Dhekorr Pirate raids on isolated frontier settlements around the Aurvandil System." });
-//db.SaveChanges();
-/*
-using (var context = new AppDbContext())
-{
-    var factions = context.Factions.ToList();
-    foreach (var faction in factions)
-    {
-        Console.WriteLine(faction.Name.ToString());
-        Console.WriteLine(faction.Description.ToString());
-    }
-}
-*/
+// Apply the CORS policy
+app.UseCors("AllowSpecificOrigins");
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

@@ -1,0 +1,26 @@
+﻿@using System.Net.Http 
+@using System.Net.Http.Json 
+@using BlazorWebAssembly.Models
+
+<div class="top-row ps-3 navbar navbar-dark">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="">Cosmic Starfront Wiki</a>
+        <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+    </div>
+</div>
+
+<div class="@NavMenuCssClass nav-scrollable" @onclick="ToggleNavMenu">
+    <nav class="nav flex-column, p-3">
+        <EditForm Model="@_searchModel" OnValidSubmit="@HandleSearch">
+            <div> 
+                <label for="searchQuery">Search:</label> 
+                <InputText id="searchQuery" @bind-Value="_searchModel.Query" /> 
+                <button type="submit">Search</button> 
+            </div> 
+        </EditForm>
+    </nav>
+</div>
+
+

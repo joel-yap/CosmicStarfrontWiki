@@ -1,0 +1,64 @@
+﻿@page "/addpage"
+@using BlazorWebAssembly.Enums
+@using BlazorWebAssembly.Models
+@using System.Net.Http
+@using System.Net.Http.Json
+
+<h3>Add New Page</h3>
+
+<EditForm Model="@wikiPage" OnValidSubmit="@HandleValidSubmit">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div>
+        <label for="title">Title:</label>
+        <InputText id="title" @bind-Value="wikiPage.Title" />
+    </div>
+    <div>
+        <label for="category">Category:</label>
+        <InputSelect id="category" @bind-Value="wikiPage.Category">
+            <option value="">Select a category</option>
+            @foreach (var category in Enum.GetValues(typeof(Category)))
+            {
+                <option value="@category">@category</option>
+            }
+        </InputSelect>
+    </div>
+    <div>
+        <label for="image">Image URL:</label>
+        <InputText id="image" @bind-Value="wikiPage.Image" />
+    </div>
+    <div>
+        <label for="imageStyle">Image Style:</label>
+        <InputText id="imageStyle" @bind-Value="wikiPage.ImageStyle" />
+    </div>
+
+    @foreach (var section in wikiPage.Sections)
+    {
+        <div>
+            <label>Section Header:</label>
+            <InputText @bind-Value="section.Header" />
+            @foreach (var content in section.Contents)
+            {
+                <div>
+                    <label>Content Text:</label>
+                    <InputTextArea @bind-Value="content.Text" />
+                    <label>Content Subheader:</label>
+                    <InputText @bind-Value="content.Subheader" />
+                    <label>Content Image URL:</label>
+                    <InputText @bind-Value="content.Image" />
+                    <label>Content Image Style:</label>
+                    <InputText @bind-Value="content.ImageStyle" />
+                </div>
+            }
+            <button type="button" @onclick="() => AddContent(section)">Add Content</button>
+        </div>
+    }
+
+    <button type="button" @onclick="AddSection">Add Section</button> 
+    <br />
+    <button type="submit" @onclick="NotifyUser">Add Page</button>
+    <p>@_notificationMessage</p>
+</EditForm>
+
+
