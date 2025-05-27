@@ -10,6 +10,7 @@ public class WikiPageDTO
     public string? Image { get; set; }
     public string? ImageStyle { get; set; }
     public GalleryDTO? Gallery { get; set; }
+    public int? Subcategory { get; set; }
 }
 
 public class SectionDTO
