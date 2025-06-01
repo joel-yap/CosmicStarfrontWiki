@@ -9,7 +9,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CosmicStarfrontWiki.Model",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CosmicStarfrontWiki.Data", "CosmicStarfrontWiki.Data\CosmicStarfrontWiki.Data.csproj", "{DF68C1B5-EB6F-4FD9-9CDC-1D834AAE4163}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorWebAssembly", "BlazorWebAssembly\BlazorWebAssembly.csproj", "{8D5A1116-9E65-4C51-B6C0-C6098EB3F615}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CosmicStarfrontWiki.Web", "CosmicStarfrontWiki.Web\CosmicStarfrontWiki.Web.csproj", "{C9028AF1-531D-A163-643C-D5B74B419DC4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -29,12 +29,15 @@ Global
 		{DF68C1B5-EB6F-4FD9-9CDC-1D834AAE4163}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DF68C1B5-EB6F-4FD9-9CDC-1D834AAE4163}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DF68C1B5-EB6F-4FD9-9CDC-1D834AAE4163}.Release|Any CPU.Build.0 = Release|Any CPU
-		{8D5A1116-9E65-4C51-B6C0-C6098EB3F615}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8D5A1116-9E65-4C51-B6C0-C6098EB3F615}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8D5A1116-9E65-4C51-B6C0-C6098EB3F615}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8D5A1116-9E65-4C51-B6C0-C6098EB3F615}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C9028AF1-531D-A163-643C-D5B74B419DC4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C9028AF1-531D-A163-643C-D5B74B419DC4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C9028AF1-531D-A163-643C-D5B74B419DC4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C9028AF1-531D-A163-643C-D5B74B419DC4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {94F26962-7DFA-430B-944A-85181998489C}
 	EndGlobalSection
 EndGlobal
