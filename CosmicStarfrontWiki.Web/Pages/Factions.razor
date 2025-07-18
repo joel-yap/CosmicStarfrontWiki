@@ -1,0 +1,65 @@
+﻿@page "/Factions"
+@using CosmicStarfrontWiki.Web.Enums
+@using CosmicStarfrontWiki.Web.Models
+@using CosmicStarfrontWiki.Web.Services
+
+<h1>Factions</h1>
+
+<ul class="image-grid">
+    @if (ResultCategory != null)
+    {
+        @foreach (var faction in ResultCategory)
+        {
+            <li>
+                <div class="flex2">
+                    <img src="@(faction.Image)" class="character-portrait" />
+                    <a href="/wiki/@(faction.Title)">@faction.Title</a>
+                </div>
+            </li>
+        }
+    }
+    @* To do: create dynamic pages *@
+    <li>
+        <div class="flex2">
+            <img src="images/Khrontar_Logo1.jpg"/>
+            <a href="/wiki/KE">Khrontar Empire</a>
+        </div>
+    </li>
+    <li>
+        <div class="flex2">
+            <img src="images/Vodrun_Logo1.jpg"/>
+            <a href="/wiki/VAS">Vodrun Aligned Systems</a>
+        </div>
+    </li>
+    <!-- Add more images as needed -->
+</ul>
+
+<ul class="image-grid">
+    <li>
+        <div class="flex2">
+            <img src="images/Threx_Logo1.jpg"/>
+            <a href="/wiki/TE">Threx Empire</a>
+        </div>
+    </li>
+    <li>
+        <div class="flex2">
+            <img src="images/Dhekorr_Logo1.jpg"/>
+            <a href="/wiki/DS">Dhekorr Syndicates</a>
+        </div>
+    </li>
+    <li>
+        <div class="flex2">
+            <img src="images/Khalan_Logo.jpg"/>
+            <a href="/wiki/TE">Khalan Star Empire</a>
+        </div>
+    </li>
+    <li>
+        <div class="flex2">
+            <img src="images/Void_Logo.jpg"/>
+            <a href="/wiki/TE">Void Legion</a>
+        </div>
+    </li>
+</ul>
+
+
+

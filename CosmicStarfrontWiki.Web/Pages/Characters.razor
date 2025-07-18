@@ -1,0 +1,93 @@
+﻿@page "/Characters"
+@using CosmicStarfrontWiki.Web.Enums
+@using CosmicStarfrontWiki.Web.Models
+@using CosmicStarfrontWiki.Web.Services
+
+<PageTitle>@TITLE</PageTitle>
+
+<h1>Characters</h1>
+
+<h3>Player Characters</h3>
+<ul class="image-grid">
+    @if (ResultCategory != null) {
+        @foreach (var character in ResultCategory)
+        {
+            <li>
+                <div class="flex2">
+                    <img src="@(character.Image)" class="character-portrait" />
+                    <a href="/wiki/@(character.Title)">@character.Title</a>
+                </div>
+            </li>
+        }
+    }
+</ul>
+<hr />
+<h3>Supporting Characters</h3>
+<ul class="image-grid">
+    <li>
+        <div class="flex2">
+            <img src="images/Viator.jpg" style="height: 250px;" />
+            <a href="/wiki/Viator">Cmdr. Viator</a>
+        </div>
+    </li>
+    <li>
+        <div class="flex2">
+            <img src="images/Pilot1.jpg" style="height: 250px;" />
+            <a href="/wiki/Kate">Cpt. Katelynn</a>
+        </div>
+    </li>
+    <li>
+        <div class="flex2">
+            <img src="images/ShipEngineer.jpg" style="height: 250px;" />
+            <a href="/wiki/Nick">Sgt. Nick</a>
+        </div>
+    </li>
+    <li>
+        <div class="flex2">
+            <img src="images/Enigma.jpg" style="height: 250px;" />
+            <a href="/wiki/Enigma">Dr. Enigma</a>
+        </div>
+    </li>
+    <li>
+        <div class="flex2">
+            <img src="images/Representative.jpg" style="height: 250px;" />
+            <a href="/wiki/Campbell">Rep. Campbell</a>
+        </div>
+    </li>
+</ul>
+<hr />
+<h3>Bosses</h3>
+<ul class="image-grid">
+    <li>
+        <div class="flex2">
+            <img src="images/ThrexComm.jpg" style="height: 250px;" />
+            <a href="/wiki/ThrexComm">The Warlord</a>
+        </div>
+    </li>
+    <li>
+        <div class="flex2">
+            <img src="images/Assassin.jpg" style="height: 250px;" />
+            <a href="/wiki/Assassin">The Assassin</a>
+        </div>
+    </li>
+    <li>
+        <div class="flex2">
+            <img src="images/BotComm.jpg" style="height: 250px;" />
+            <a href="/wiki/Zenith">The Zenith</a>
+        </div>
+    </li>
+    <li>
+        <div class="flex2">
+            <img src="images/RivalMerc.jpg" style="height: 250px;" />
+            <a href="/wiki/RivalMerc">The Mercenary</a>
+        </div>
+    </li>
+    <li>
+        <div class="flex2">
+            <img src="images/PirateComm.jpg" style="height: 250px;" />
+            <a href="/wiki/Corsair">The Corsair</a>
+        </div>
+    </li>
+</ul>
+
+

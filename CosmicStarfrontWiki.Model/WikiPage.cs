@@ -29,6 +29,7 @@ namespace CosmicStarfrontWiki.Model
         public string? Image { get; set; }
         public string? ImageStyle { get; set; }
         public Gallery? Gallery { get; set; }
+        public int? Subcategory { get; set; }
     }
 
     public class Section

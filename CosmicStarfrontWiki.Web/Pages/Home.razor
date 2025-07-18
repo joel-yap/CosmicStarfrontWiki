@@ -1,0 +1,63 @@
+﻿@page "/"
+@using CosmicStarfrontWiki.Web.Models
+@using CosmicStarfrontWiki.Web.Services
+
+<PageTitle>@HOME_TITLE</PageTitle>
+
+<h1 class="lighttitle">Cosmic Starfront Wiki</h1>
+
+<!--<p class="text-white fw-bolder">Welcome to the official Cosmic Starfront Wiki, the official resource for the game.</p>-->
+<p class="lightbold">Welcome to the official Cosmic Starfront Wiki, the official resource for the game.</p>
+
+@if (Panels != null) {
+    <div class="darkbackground">
+        <h3 class="boxheader">Basics</h3>
+        <hr class="my-0 mx-3"/>
+        <div class="flex1">
+            @foreach (var panel in Panels)
+            {
+                if (panel.Box == 0)
+                {
+                    <div class="flex2">
+                        <img src=@panel.Image />
+                        <a href=@panel.Link>@panel.Name</a>
+                    </div>
+                }
+            }
+        </div>
+    </div>
+}
+
+@if (Panels != null)
+{
+    <div class="darkbackground">
+        <div class="flex1">
+            @foreach (var panel in Panels)
+            {
+                if (panel.Box == 1)
+                {
+                    <div class="flex2">
+                        <img src=@panel.Image />
+                        <a href=@panel.Link>@panel.Name</a>
+                    </div>
+                }
+            }
+        </div>
+    </div>
+}
+
+@* <div class="darkbackground">
+    <div class="flex1">
+        <p class="boxheader">
+            News
+        </p>
+    </div>
+
+    <div class="flex1">
+        <p class="boxheader">
+            Links
+        </p>
+    </div>
+</div> *@
+
+
