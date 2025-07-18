@@ -76,4 +76,22 @@ main {
     }
 }
 
+.body {
+    background-image: url('BlueHolographicPlanet.jpg');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    background-color: blue;
+}
+
+.top-row2 {
+    background-color: #596e97;
+    border-bottom: 1px solid black;
+    justify-content: flex-end;
+    height: 3.5rem;
+    display: flex;
+    align-items: center;
+}
+
+
 

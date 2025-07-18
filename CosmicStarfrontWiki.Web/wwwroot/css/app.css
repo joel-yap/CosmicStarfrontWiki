@@ -117,10 +117,14 @@ code {
 .flex1 {
     display: flex;
     justify-content: space-between;
-    background-color: grey;
-    border: 1px;
+    /*background-color: grey;*/
+    background-color: #041321;
+    /*border-style: solid;
+    border-color: deepskyblue;*/
+    /*border: 1px;*/
     margin: 10px;
-    padding: 10px
+    padding: 10px;
+    /*outline: 1px solid black;*/
 }
 
 .flex2 {
@@ -129,9 +133,9 @@ code {
     align-items: center;
 }
 
-    .flex2 > img {
-        height: 175px;
-    }
+.flex2 > img {
+    height: 175px;
+}
 
 .image-grid {
     list-style-type: none; /* Remove list bullets */
@@ -161,5 +165,60 @@ code {
     display: flex;
     justify-content: space-between;
 }
+
+body {
+    background-image: url('../images/Space1.jpg');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    background-color: lightblue;
+}
+
+.lighttitle {
+    font-size: 3em;
+    font-weight: 700;
+    -webkit-text-fill-color: white;
+}
+
+.lightbold {
+    font-size: 2em;
+    font-weight: 600;
+    -webkit-text-fill-color: white;
+}
+
+a {
+    color: cyan;
+}
+
+h1, h3, h4 {
+    color: dodgerblue;
+}
+
+.darkbackground {
+    background-color: #041321;
+    border-style: solid;
+    border-color: deepskyblue;
+    outline: 1px solid black;
+    margin: 10px;
+}
+
+.boxheader {
+    text-align: center;
+    margin: 0px;
+    color: deepskyblue;
+}
+
+hr {
+    color: deepskyblue;
+}
+
+.topbar {
+    background-color: #295dc5;
+}
+
+a {
+    text-decoration: none;
+}
+
 
 
