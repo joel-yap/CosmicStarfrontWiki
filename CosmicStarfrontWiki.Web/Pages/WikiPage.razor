@@ -4,7 +4,7 @@
 @if (ResultPage != null) 
 {
     <PageTitle>@ResultPage.Title</PageTitle>
-    <div>
+    <div class="darkbackground lighttextc px-3">
         @foreach (var pageSection in ResultPage.Sections)
         {
             if (sectionCounter == 0) 
@@ -47,9 +47,9 @@
         }
     </div>
     <div>
-        <table style="background-color: lightgrey">
+        <table class="darkbackground lighttextc px-3">
             <tr style="text-align: center;">
-                <td>
+                <td style="color: white;">
                     @ResultPage.Category
                 </td>
             </tr>

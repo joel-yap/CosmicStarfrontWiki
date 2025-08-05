@@ -7,87 +7,146 @@
 
 <h1>Characters</h1>
 
-<h3>Player Characters</h3>
-<ul class="image-grid">
-    @if (ResultCategory != null) {
-        @foreach (var character in ResultCategory)
+<div class="darkbackground lighttextc px-3">
+    <h3 class="boxheader">Player Characters</h3>
+    <hr />
+    <ul class="image-grid">
+        @if (ResultCategory != null)
         {
-            <li>
-                <div class="flex2">
-                    <img src="@(character.Image)" class="character-portrait" />
-                    <a href="/wiki/@(character.Title)">@character.Title</a>
-                </div>
-            </li>
+            @foreach (var character in ResultCategory)
+            {
+                <li>
+                    <a href="/wiki/@(character.Title)" class="text-decoration-none">
+                        <div class="card border-0 position-relative overflow-hidden" style="width:250px">
+                            <img src="@(character.Image)" class="card-img" alt="Panel Image">
+                            <div class="position-absolute bottom-0 w-100 text-white p-2" style="background: rgba(0,0,0,0.6);">
+                                <h5 class="mb-0 text-center">@character.Title</h5>
+                            </div>
+                        </div>
+                    </a>
+                </li>
+            }
         }
-    }
-</ul>
+    </ul>
+</div>
+
 <hr />
-<h3>Supporting Characters</h3>
-<ul class="image-grid">
-    <li>
-        <div class="flex2">
-            <img src="images/Viator.jpg" style="height: 250px;" />
-            <a href="/wiki/Viator">Cmdr. Viator</a>
-        </div>
-    </li>
-    <li>
-        <div class="flex2">
-            <img src="images/Pilot1.jpg" style="height: 250px;" />
-            <a href="/wiki/Kate">Cpt. Katelynn</a>
-        </div>
-    </li>
-    <li>
-        <div class="flex2">
-            <img src="images/ShipEngineer.jpg" style="height: 250px;" />
-            <a href="/wiki/Nick">Sgt. Nick</a>
-        </div>
-    </li>
-    <li>
-        <div class="flex2">
-            <img src="images/Enigma.jpg" style="height: 250px;" />
-            <a href="/wiki/Enigma">Dr. Enigma</a>
-        </div>
-    </li>
-    <li>
-        <div class="flex2">
-            <img src="images/Representative.jpg" style="height: 250px;" />
-            <a href="/wiki/Campbell">Rep. Campbell</a>
-        </div>
-    </li>
-</ul>
+
+<div class="darkbackground lighttextc px-3">
+    <h3 class="boxheader">Supporting Characters</h3>
+    <hr />
+    <ul class="image-grid">
+        <li>
+            <a href="/wiki/Viator" class="text-decoration-none">
+                <div class="card border-0 position-relative overflow-hidden" style="width:250px">
+                    <img src="images/Viator.jpg" class="card-img" alt="Panel Image">
+                    <div class="position-absolute bottom-0 w-100 text-white p-2" style="background: rgba(0,0,0,0.6);">
+                        <h5 class="mb-0 text-center">Cmdr. Viator</h5>
+                    </div>
+                </div>
+            </a>
+        </li>
+        <li>
+            <a href="/wiki/Kate" class="text-decoration-none">
+                <div class="card border-0 position-relative overflow-hidden" style="width:250px">
+                    <img src="images/Pilot1.jpg" class="card-img" alt="Panel Image">
+                    <div class="position-absolute bottom-0 w-100 text-white p-2" style="background: rgba(0,0,0,0.6);">
+                        <h5 class="mb-0 text-center">Cpt. Katelynn</h5>
+                    </div>
+                </div>
+            </a>
+        </li>
+        <li>
+            <a href="/wiki/Nick" class="text-decoration-none">
+                <div class="card border-0 position-relative overflow-hidden" style="width:250px">
+                    <img src="images/ShipEngineer.jpg" class="card-img" alt="Panel Image">
+                    <div class="position-absolute bottom-0 w-100 text-white p-2" style="background: rgba(0,0,0,0.6);">
+                        <h5 class="mb-0 text-center">Sgt. Nick</h5>
+                    </div>
+                </div>
+            </a>
+        </li>
+        <li>
+            <a href="/wiki/Enigma" class="text-decoration-none">
+                <div class="card border-0 position-relative overflow-hidden" style="width:250px">
+                    <img src="images/Enigma.jpg" class="card-img" alt="Panel Image">
+                    <div class="position-absolute bottom-0 w-100 text-white p-2" style="background: rgba(0,0,0,0.6);">
+                        <h5 class="mb-0 text-center">Dr. Enigma</h5>
+                    </div>
+                </div>
+            </a>
+        </li>
+        <li>
+            <a href="/wiki/Campbell" class="text-decoration-none">
+                <div class="card border-0 position-relative overflow-hidden" style="width:250px">
+                    <img src="images/Representative.jpg" class="card-img" alt="Panel Image">
+                    <div class="position-absolute bottom-0 w-100 text-white p-2" style="background: rgba(0,0,0,0.6);">
+                        <h5 class="mb-0 text-center">Rep. Campbell</h5>
+                    </div>
+                </div>
+            </a>
+        </li>
+    </ul>
+</div>
+
 <hr />
-<h3>Bosses</h3>
-<ul class="image-grid">
-    <li>
-        <div class="flex2">
-            <img src="images/ThrexComm.jpg" style="height: 250px;" />
-            <a href="/wiki/ThrexComm">The Warlord</a>
-        </div>
-    </li>
-    <li>
-        <div class="flex2">
-            <img src="images/Assassin.jpg" style="height: 250px;" />
-            <a href="/wiki/Assassin">The Assassin</a>
-        </div>
-    </li>
-    <li>
-        <div class="flex2">
-            <img src="images/BotComm.jpg" style="height: 250px;" />
-            <a href="/wiki/Zenith">The Zenith</a>
-        </div>
-    </li>
-    <li>
-        <div class="flex2">
-            <img src="images/RivalMerc.jpg" style="height: 250px;" />
-            <a href="/wiki/RivalMerc">The Mercenary</a>
-        </div>
-    </li>
-    <li>
-        <div class="flex2">
-            <img src="images/PirateComm.jpg" style="height: 250px;" />
-            <a href="/wiki/Corsair">The Corsair</a>
-        </div>
-    </li>
-</ul>
+
+<div class="darkbackground lighttextc px-3">
+    <h3 class="boxheader">Bosses</h3>
+    <hr />
+    <ul class="image-grid">
+        <li>
+            <a href="/wiki/ThrexComm" class="text-decoration-none">
+                <div class="card border-0 position-relative overflow-hidden" style="width:250px">
+                    <img src="images/ThrexComm.jpg" class="card-img" alt="Panel Image">
+                    <div class="position-absolute bottom-0 w-100 text-white p-2" style="background: rgba(0,0,0,0.6);">
+                        <h5 class="mb-0 text-center">The Warlord</h5>
+                    </div>
+                </div>
+            </a>
+        </li>
+        <li>
+            <a href="/wiki/Assassin" class="text-decoration-none">
+                <div class="card border-0 position-relative overflow-hidden" style="width:250px">
+                    <img src="images/Assassin.jpg" class="card-img" alt="Panel Image">
+                    <div class="position-absolute bottom-0 w-100 text-white p-2" style="background: rgba(0,0,0,0.6);">
+                        <h5 class="mb-0 text-center">The Assassin</h5>
+                    </div>
+                </div>
+            </a>
+        </li>
+        <li>
+            <a href="/wiki/Zenith" class="text-decoration-none">
+                <div class="card border-0 position-relative overflow-hidden" style="width:250px">
+                    <img src="images/BotComm.jpg" class="card-img" alt="Panel Image">
+                    <div class="position-absolute bottom-0 w-100 text-white p-2" style="background: rgba(0,0,0,0.6);">
+                        <h5 class="mb-0 text-center">The Zenith</h5>
+                    </div>
+                </div>
+            </a>
+        </li>
+        <li>
+            <a href="/wiki/RivalMerc" class="text-decoration-none">
+                <div class="card border-0 position-relative overflow-hidden" style="width:250px">
+                    <img src="images/RivalMerc.jpg" class="card-img" alt="Panel Image">
+                    <div class="position-absolute bottom-0 w-100 text-white p-2" style="background: rgba(0,0,0,0.6);">
+                        <h5 class="mb-0 text-center">The Mercenary</h5>
+                    </div>
+                </div>
+            </a>
+        </li>
+        <li>
+            <a href="/wiki/Corsair" class="text-decoration-none">
+                <div class="card border-0 position-relative overflow-hidden" style="width:250px">
+                    <img src="images/PirateComm.jpg" class="card-img" alt="Panel Image">
+                    <div class="position-absolute bottom-0 w-100 text-white p-2" style="background: rgba(0,0,0,0.6);">
+                        <h5 class="mb-0 text-center">The Corsair</h5>
+                    </div>
+                </div>
+            </a>
+        </li>
+    </ul>
+</div>
+
 
 

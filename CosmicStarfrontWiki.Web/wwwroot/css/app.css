@@ -194,7 +194,8 @@ a {
 }
 
 h1, h3, h4 {
-    color: dodgerblue;
+    /*color: dodgerblue;*/
+    color: white;
 }
 
 .darkbackground {
@@ -207,12 +208,13 @@ h1, h3, h4 {
 
 .boxheader {
     text-align: center;
-    margin: 0px;
+    margin-top: 1px;
     color: deepskyblue;
 }
 
 hr {
     color: deepskyblue;
+    margin: 0.5rem;
 }
 
 .topbar {
@@ -226,6 +228,10 @@ a {
 .card:hover {
     border: 3px solid #00bfff;
     transition: border 0.3s ease;
+}
+
+.lighttextc p {
+    color: white;
 }
 
 
