@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Oxanium:wght@400;700&display=swap');
+
 html, body {
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
@@ -172,6 +174,7 @@ body {
     background-position: center;
     background-attachment: fixed;
     background-color: lightblue;
+    font-family: 'Oxanium', sans-serif;
 }
 
 .lighttitle {
@@ -219,6 +222,12 @@ hr {
 a {
     text-decoration: none;
 }
+
+.card:hover {
+    border: 3px solid #00bfff;
+    transition: border 0.3s ease;
+}
+
 
 
 
